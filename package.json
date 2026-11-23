@@ -1,0 +1,213 @@
+{
+    "name": "mephedrone",
+    "desktopName": "mephedrone",
+    "version": "0.1.0",
+    "private": true,
+    "description": "[MEPHEDRONE]: a privacy-first Discord client",
+    "keywords": [],
+    "license": "GPL-3.0-or-later",
+    "author": {
+        "name": "Mephedrone Team",
+        "email": "270469377+Shelf22@users.noreply.github.com"
+    },
+    "main": "dist/js/main.js",
+    "workspaces": [
+        "packages/discord-rpc"
+    ],
+    "scripts": {
+        "build": "bun run scripts/build/build.mts",
+        "build:dev": "bun run build --dev",
+        "buildLibVesktop": "bun install --cwd packages/libvesktop && bun run --cwd packages/libvesktop build",
+        "package": "bun run build && electron-builder",
+        "package:dir": "bun run build && electron-builder --dir",
+        "lint": "oxlint src scripts packages/discord-rpc",
+        "lint:fix": "bun run lint --fix",
+        "fmt": "oxfmt",
+        "fmt:check": "oxfmt --check",
+        "start": "bun run build && electron --enable-source-maps .",
+        "start:dev": "bun run build:dev && electron --enable-source-maps .",
+        "start:watch": "bun run build:dev && bun run scripts/startWatch.mts",
+        "test": "bun run lint && bun run fmt:check && bun run testTypes",
+        "testTypes": "tsc --noEmit",
+        "watch": "bun run build --watch",
+        "generateMeta": "bun run scripts/utils/generateMeta.mts"
+    },
+    "dependencies": {},
+    "optionalDependencies": {
+        "@vencord/venmic": "^7.2.5"
+    },
+    "devDependencies": {
+        "@equicord/types": "1.15.17-2",
+        "@fal-works/esbuild-plugin-global-externals": "^2.1.2",
+        "@types/node": "^26.6.6",
+        "@types/react": "19.2.9",
+        "discord-rpc": "workspace:*",
+        "electron": "^45.4.1",
+        "electron-builder": "^26.18.0",
+        "esbuild": "^0.28.2",
+        "eslint-plugin-simple-header": "^1.2.2",
+        "libvesktop": "file:packages/libvesktop",
+        "oxfmt": "^0.76.0",
+        "oxlint": "^1.93.0",
+        "source-map-support": "^0.5.21",
+        "tsx": "^4.23.15",
+        "type-fest": "^5.10.0",
+        "typescript": "^6.0.3",
+        "xml-formatter": "^3.7.0"
+    },
+    "engines": {
+        "bun": ">=1.3.0"
+    },
+    "build": {
+        "appId": "dev.mephedrone.client",
+        "productName": "Mephedrone",
+        "executableName": "mephedrone",
+        "files": [
+            "!*",
+            "!node_modules",
+            "dist/js",
+            "static",
+            "package.json",
+            "LICENSE",
+            "!**/*.map"
+        ],
+        "protocols": {
+            "name": "Discord",
+            "schemes": [
+                "discord"
+            ]
+        },
+        "beforePack": "scripts/build/beforePack.mjs",
+        "afterPack": "scripts/build/afterPack.mjs",
+        "afterSign": "scripts/build/afterSign.mjs",
+        "toolsets": {
+            "appimage": "1.0.3"
+        },
+        "linux": {
+            "icon": "build/icon.svg",
+            "category": "Network",
+            "maintainer": "Mephedrone Team <270469377+Shelf22@users.noreply.github.com>",
+            "target": [
+                {
+                    "target": "AppImage",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ],
+            "desktop": {
+                "entry": {
+                    "Name": "Mephedrone",
+                    "GenericName": "Discord client",
+                    "Type": "Application",
+                    "Categories": "Network;InstantMessaging;Chat;",
+                    "Keywords": "discord;mephedrone;chat;privacy;",
+                    "MimeType": "x-scheme-handler/discord",
+                    "StartupWMClass": "mephedrone"
+                }
+            }
+        },
+        "mac": {
+            "target": [
+                {
+                    "target": "default",
+                    "arch": "universal"
+                }
+            ],
+            "category": "public.app-category.social-networking",
+            "darkModeSupport": true,
+            "extendInfo": {
+                "NSMicrophoneUsageDescription": "This app needs access to the microphone",
+                "NSCameraUsageDescription": "This app needs access to the camera",
+                "com.apple.security.device.audio-input": true,
+                "com.apple.security.device.camera": true,
+                "CFBundleIconName": "Icon"
+            },
+            "notarize": true
+        },
+        "dmg": {
+            "background": "build/background.tiff",
+            "icon": "build/icon.icns",
+            "iconSize": 105,
+            "window": {
+                "width": 512,
+                "height": 340
+            },
+            "contents": [
+                {
+                    "x": 140,
+                    "y": 160
+                },
+                {
+                    "x": 372,
+                    "y": 160,
+                    "type": "link",
+                    "path": "/Applications"
+                }
+            ]
+        },
+        "nsis": {
+            "artifactName": "${productName}-Setup-${version}.${ext}",
+            "include": "build/installer.nsh",
+            "oneClick": false
+        },
+        "win": {
+            "icon": "build/icon.ico",
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": [
+                        "x64",
+                        "arm64"
+                    ]
+                },
+                {
+                    "target": "zip",
+                    "arch": [
+                        "x64",
+                        "arm64"
+                    ]
+                }
+            ]
+        },
+        "publish": null,
+        "rpm": {
+            "fpm": [
+                "--rpm-rpmbuild-define=_build_id_links none"
+            ]
+        },
+        "electronFuses": {
+            "runAsNode": false,
+            "enableCookieEncryption": true,
+            "enableNodeOptionsEnvironmentVariable": false,
+            "enableNodeCliInspectArguments": false,
+            "enableEmbeddedAsarIntegrityValidation": false,
+            "onlyLoadAppFromAsar": true,
+            "loadBrowserProcessSpecificV8Snapshot": false,
+            "grantFileProtocolExtraPrivileges": false
+        },
+        "extraResources": [
+            {
+                "from": "../dist/equibop",
+                "to": "mephedrone-client/equibop",
+                "filter": [
+                    "**/*",
+                    "!**/*.map"
+                ]
+            }
+        ],
+        "artifactName": "Mephedrone-${version}-${arch}.${ext}"
+    },
+    "trustedDependencies": [
+        "@vencord/venmic",
+        "electron",
+        "electron-winstaller",
+        "esbuild",
+        "libvesktop"
+    ],
+    "homepage": "https://github.com/Shelf22/mephedrone",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Shelf22/mephedrone-desktop.git"
+    }
+}

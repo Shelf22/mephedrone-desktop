@@ -1,0 +1,151 @@
+<!doctype html>
+<meta charset="utf-8" />
+
+<head>
+    <link rel="stylesheet" href="./common.css" type="text/css" />
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            background: none;
+            user-select: none;
+            -webkit-app-region: drag;
+            overflow: hidden;
+        }
+
+        .wrapper {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            border: 1px solid var(--fg-semi-trans);
+            background: var(--bg);
+        }
+
+        #progress-section {
+            width: 100%;
+        }
+
+        .progressbar {
+            position: relative;
+            height: 17.5px;
+            width: auto;
+            box-sizing: border-box;
+            margin-left: 16px;
+            margin-right: 16px;
+            background-color: color-mix(in srgb, var(--bg), black 20%);
+            border: 1px solid color-mix(in srgb, var(--fg-semi-trans), white 10%);
+            border-radius: 4px;
+        }
+
+        .progressbar #progress {
+            height: 100%;
+            width: 0%;
+            max-width: 100%;
+            background-color: color-mix(in srgb, var(--fg-semi-trans), black 10%);
+            border-radius: 4px;
+            transition: width 0.5s ease-in;
+        }
+
+        .progressbar #progress-percentage {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 13px;
+            font-weight: bold;
+            outline: 1px solid var(--fg-semi-trans);
+        }
+
+        .message {
+            top: 70%;
+            word-break: break-word;
+            padding: 0 16px;
+            position: absolute;
+            font-size: 14px;
+        }
+
+        p {
+            text-align: center;
+        }
+
+        .wrapper { background: radial-gradient(120% 120% at 50% 30%, #13222a 0%, #0a0a0d 60%) !important; border-color: #9fe8ff33 !important; color: #e9f6ff; }
+        .meph-logo { width: 112px; height: 112px; overflow: visible; filter: drop-shadow(0 0 14px #9fe8ff66); animation: meph-breathe 2.4s ease-in-out 1.2s infinite; }
+        .meph-logo .br { fill: none; stroke: #e9f6ff; stroke-width: 7; }
+        .meph-logo .br.l { animation: meph-in-l .55s cubic-bezier(.34,1.56,.64,1) both; }
+        .meph-logo .br.r { animation: meph-in-r .55s cubic-bezier(.34,1.56,.64,1) both; }
+        .meph-logo .m { fill: none; stroke: #9fe8ff; stroke-width: 10; stroke-linejoin: round; stroke-linecap: round;
+            stroke-dasharray: 200; stroke-dashoffset: 200; animation: meph-draw .9s .35s cubic-bezier(.65,0,.35,1) forwards; }
+        .meph-logo .spark { fill: #fff; opacity: 0; transform-origin: 96px 32px; animation: meph-spark .5s 1.15s cubic-bezier(.34,1.56,.64,1) forwards; }
+        .meph-title { margin: 14px 0 0; font: 800 17px/1 ui-monospace, "JetBrains Mono", monospace; letter-spacing: 4px; opacity: 0; animation: meph-up .5s 1s ease forwards; }
+        .meph-sub { margin: 8px 0 0; font: 500 12px/1 ui-monospace, monospace; color: #9fe8ffaa; opacity: 0; animation: meph-up .5s 1.2s ease forwards; }
+        .dots i { font-style: normal; animation: meph-dot 1.2s infinite; }
+        .dots i:nth-child(2) { animation-delay: .2s; } .dots i:nth-child(3) { animation-delay: .4s; }
+        .progressbar #progress { background: linear-gradient(90deg, #9fe8ff, #e9f6ff) !important; }
+        @keyframes meph-in-l { from { transform: translateX(-26px); opacity: 0; } to { transform: none; opacity: 1; } }
+        @keyframes meph-in-r { from { transform: translateX(26px); opacity: 0; } to { transform: none; opacity: 1; } }
+        @keyframes meph-draw { to { stroke-dashoffset: 0; } }
+        @keyframes meph-spark { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+        @keyframes meph-up { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+        @keyframes meph-breathe { 0%, 100% { filter: drop-shadow(0 0 10px #9fe8ff55); transform: scale(1); } 50% { filter: drop-shadow(0 0 22px #9fe8ffaa); transform: scale(1.03); } }
+        @keyframes meph-dot { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+        @media (prefers-reduced-motion: reduce) { .meph-logo *, .meph-logo, .meph-title, .meph-sub { animation: none !important; opacity: 1 !important; stroke-dashoffset: 0 !important; } }
+
+        .pixelated img {
+            image-rendering: pixelated;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <svg class="meph-logo" viewBox="0 0 128 128" aria-hidden="true">
+            <path class="br l" d="M30 26h-10v76h10" />
+            <path class="br r" d="M98 26h10v76H98" />
+            <path class="m" d="M38 92V38l26 30 26-30v54" />
+            <circle class="spark" cx="96" cy="32" r="5" />
+        </svg>
+        <p class="meph-title">[MEPHEDRONE]</p>
+        <p class="meph-sub">waking up<span class="dots"><i>.</i><i>.</i><i>.</i></span></p>
+        <p class="message"></p>
+
+        <div id="progress-section">
+            <div class="progressbar">
+                <span id="progress-percentage">0%</span>
+                <div id="progress"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const messageElement = document.querySelector(".message");
+        const progressBar = document.getElementById("progress");
+        const progressPercentage = document.getElementById("progress-percentage");
+        const progressSection = document.getElementById("progress-section");
+
+        VesktopSplashNative.onUpdateMessage(message => {
+            messageElement.textContent = message;
+        });
+        VesktopSplashNative.onUpdateProgress(percentage => {
+            progressBar.style.width = percentage + "%";
+            progressPercentage.textContent = percentage + "%";
+        });
+        VesktopSplashNative.onSetProgressVisible(visible => {
+            progressSection.style.display = visible ? "" : "none";
+        });
+    });
+</script>
